@@ -30,7 +30,7 @@ public class FileToS3 extends RouteBuilder {
     private String delay;
 
     @Override
-    public void configure() throws Exception {
+    public void configure() {
 
         onException(AmazonServiceException.class)
                 .maximumRedeliveries(retryCount)
@@ -56,6 +56,7 @@ public class FileToS3 extends RouteBuilder {
         from("file:/Users/prashantyadav/git/aws-experiment/src/test/resources?fileName=MyFile.txt")
                 //.convertBodyTo(byte[].class) // Not required - Check for retry or other issues String.class
                 //.streamCaching()
+                // .to(doTransformation)
                 .log("Starting")
                 .setHeader(S3Constants.CONTENT_LENGTH, simple("${in.header.CamelFileLength}"))
                 .setHeader(S3Constants.KEY, constant(objectName)) //Can set CamelFileName or whatever we need

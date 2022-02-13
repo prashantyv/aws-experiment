@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: aws-experiment
+  profiles:
+    active: dev
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+
+---
+
+spring:
+  profiles: dev
+
+cloud:
+  aws:
+    credentials:
+      profile-name: experiment
+
+aws:
+  accessKeyId: accessKeyId # Replace with key
+  secretKey: secretKey # Replace with key
+  s3:
+    #region:
+    kmsKey: kmsKey # Replace with key from S3
+    bucketName: my-aws-experiment-bucket84
+    proxyAddress: http://10.0.130.110
+    proxyPort: 8080
+    objectName: input/BusinessFile.txt
+    clientURI: aws-s3://${aws.s3.bucketName}?amazonS3Client=#setClient&deleteAfterWrite=false&useAwsKMS=true&awsKMSKeyId=${aws.s3.kmsKey}
+    # deleteAfterWrite property - may give warning
+
+exception:
+  retryCount: 1
+  delay: 30000
